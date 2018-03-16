@@ -40,6 +40,13 @@ var fileId;
 var studentname = null;
 var studentemail = null;
 
+/// CONSTANTS ///
+
+var WORKTITLECOLUMN = 1; // B
+var WORKMARKCOLUMN = 2; // C 
+var TEACHERCOMMENTCOLUMN = 4; // E
+var STUDENTTARGETCOLUMN = 5; // F
+
 
 function getstudent(studentname, studentemail){
  
@@ -184,19 +191,15 @@ function getcomments() {
     
     for(var i = 0; i < allvalues.length; i++){
       var row = "";
-      currentTargets.push(allvalues[i][4]);
-      Logger.log("the student target is %s", allvalues[i][4]);
-      for(var j = 0; j < allvalues[i].length; j++){
-        if(allvalues[i][j+1] == hwk){
-          var teachercomment = allvalues[i][j+3];
-          var targetset = allvalues[i][j+4];
-          var markgiven = allvalues[i][j+2];
+      currentTargets.push(allvalues[i][STUDENTTARGETCOLUMN]);
+      Logger.log("the student target is %s", allvalues[i][STUDENTTARGETCOLUMN]);
+        if(allvalues[i][WORKTITLECOLUMN] == hwk){
+          var teachercomment = allvalues[i][TEACHERCOMMENTCOLUMN];
+          var targetset = allvalues[i][STUDENTTARGETCOLUMN];
+          var markgiven = allvalues[i][WORKMARKCOLUMN];
           Logger.log("the teachers comment is %s", teachercomment);
           Logger.log("the row number %s",i+1);   
-        }
-      
-      }
-    
+        }    
     }
 
     return [student[1], teachercomment, targetset, markgiven,currentTargets];
