@@ -1,59 +1,54 @@
 <!DOCTYPE html>
 <html>
   <head>
-<base target="_top">
-<style>
-
-body{font-family:sans-serif;font-size:.8em;}
-#teacherfeedback,#previoustarget{background-color:lightgrey;padding:5px;}
-#tcomment,#targetset{background-color:white;margin:5px;}
-#studentcomment{background-color:lightsteelblue;padding:5px;}
-
-</style>
-  </head>
-  <body>
-<img src="http://warwickcomputing.studio/splat.jpg" width=100px>
-  <b><div id="greeting"></div></b>
-  <div id="teacherfeedback">
-  <p>
-  Teacher feedback on your work
-  </p>
-  <p>Comments
-  <div id="tcomment"> <img width=50 src="https://thumbs.gfycat.com/ImpassionedAfraidDipper-size_restricted.gif"></div>
-  </p>
-   <p>Target
-  
-  <div id="targetset"><img width=50 src="https://thumbs.gfycat.com/ImpassionedAfraidDipper-size_restricted.gif"> </div>
-  </p>
-  </div>
+    <base target="_top">
+    <style>
+      body{font-family:sans-serif;font-size:.8em;}
+      #teacherfeedback,#previoustarget{background-color:lightgrey;padding:1px 5px;}
+      #tcomment,#targetset{background-color:white;margin:5px;}
+      #studentcomment{background-color:lightsteelblue;padding:5px;}
+      h3{margin:0px;}
+      .minititle{margin:5px;}
+    </style>
+ </head>
+ <body>
+   <img src="http://warwickcomputing.studio/splat.jpg" width=100px>
+   <b><div id="greeting" class="minititle"></div></b>
+   <div id="teacherfeedback">
+     <h3 id="feedbackheading">Feedback</h3>
+     <div class="minititle">Comments</div>
+     <div id="tcomment"> <img width=50 src="http://warwickcomputing.studio/loading-circle.gif"></div>
+     <div class="minititle">Target</div>
+     <div id="targetset"> <img width=50 src="http://warwickcomputing.studio/loading-circle.gif"> </div>
+   </div>
   <br>
   
   <form id="myFormId" onsubmit="return false;">
-  <div id="studentcomment">
-  
-  <p>Enter your feedback below as a response to the teachers comment.</p>
-  
-  <textarea id="studcomment" rows="4" cols="37"></textarea>
-  
-  <div id="rag">
-  Assess how solid your understanding of the ideas covered in the homework is:<br/>
- <span style="background-color:red;padding:2px;"><input type="radio" name="rag" value="red"> RED</span>
-  <span style="background-color:orange;padding:2px;"><input type="radio" name="rag" value="amber" checked> AMBER</span>
-  <span style="background-color:lime;padding:2px;"><input type="radio" name="rag" value="green" > GREEN</span> 
-  </div>
+    <div id="studentcomment">
+      <h3>Reflection</h3>
+      <p>Enter your reflection below as a response to the teachers comment.</p>
+      <textarea id="studcomment" rows="4" cols="37"></textarea>
+   
+      <div id="rag">
+        Assess how solid your understanding of the ideas covered in the homework is:<br/>
+        <span style="background-color:red;padding:2px;"><input type="radio" name="rag" value="red"> RED</span>
+        <span style="background-color:orange;padding:2px;"><input type="radio" name="rag" value="amber" checked> AMBER</span>
+        <span style="background-color:lime;padding:2px;"><input type="radio" name="rag" value="green" > GREEN</span> 
+      </div>
 
-<br>
+      <br/>
   
-  <button type="submit" onclick="studentresponse()" id="Button" disabled>Submit Response</button>
-</div>
-</form>
-  <div id=""><p>
+      <button type="submit" onclick="studentresponse()" id="Button" disabled>Submit Response</button>
+    </div>
+  </form>
+  <br/>
   <div id="previoustarget">
-  <p>
-  Below is a list of outstanding targets.<br/>
-  Check the box if you feel you have met the target in this homework.
-  </p>
-  <div id="currentTargets"><img width=50 src="https://thumbs.gfycat.com/ImpassionedAfraidDipper-size_restricted.gif"></div>
+    <h3>Targets</h3>
+    <p>
+      Below is a list of outstanding targets.<br/>
+      Check the box if you feel you have met the target in this homework.
+    </p>
+    <div id="currentTargets"> <img width=50 src="http://warwickcomputing.studio/loading-circle.gif"></div>
   </div>
   </body>
   
@@ -69,7 +64,7 @@ body{font-family:sans-serif;font-size:.8em;}
     document.getElementById("greeting").innerHTML = greeting;
     document.getElementById("tcomment").innerHTML = details[1];
     document.getElementById("targetset").innerHTML = details[2];
-    
+    document.getElementById("feedbackheading").innerHTML = "Feedback for "+details[5];
     var ct='';
     for (i = 0; i < details[4].length; i++) { 
     ct += '<span id="target'+details[4][i][0]+'"><input type="checkbox" name="ct" onclick="updateTarget(\''+details[4][i][0] +'\');"> '+details[4][i][1] + '</span><br>';

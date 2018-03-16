@@ -234,7 +234,7 @@ function getcomments() {
           Logger.log("the teachers comment is %s", teachercomment);
           Logger.log("the row number %s",i+1);   
           hwkFound = true;
-          return [student[1], teachercomment, targetset, markgiven,currentTargets];
+          return [student[1], teachercomment, targetset, markgiven,currentTargets,hwk];
         }    
     }
 
