@@ -11,14 +11,16 @@ h1{font-family:sans-serif;}
     height: 300px;
 }
 #overlay {
+    display:none;
     font-family:sans-serif;
+    font-size:0.8em;
     padding:10px;
     background-color:lightgrey;
-    width: 100px;
-    height: 20px;
+    width: 80px;
+    height: 1em;
     position: absolute;
-    bottom: 100px;  /* chartArea top  */
-    right: 180px; /* chartArea left */
+    bottom: 110px;  /* chartArea top  */
+    right: 0px; /* chartArea left */
     
 }
 
@@ -27,7 +29,7 @@ h1{font-family:sans-serif;}
   <body>
     <div class="chartWithOverlay">
 
- <div id="line-chart" ><img src="https://thumbs.gfycat.com/ImpassionedAfraidDipper-size_restricted.gif"></div>
+ <div id="line-chart" ><img width=100 src="http://warwickcomputing.studio/loading-circle.gif"></div>
 
  <div id="overlay">
   </div>
@@ -61,7 +63,8 @@ h1{font-family:sans-serif;}
                      vAxis: { title: "Mark", minValue: 0, maxValue: 10},
                      hAxis: {title: "Homework",showTextEvery:1},
                      animation: {"startup": true},
-                     legend: 'none'
+                     legend: 'none',
+                     pointSize: 5
                      
                      
                      };
@@ -90,6 +93,7 @@ var targets = new google.visualization.DataView(data);
 		 sum += hwkmarks.getValue(i,1)
     }
     average = (sum/tablerows).toFixed(2);
+    document.getElementById("overlay").style.display = "block";
     document.getElementById("overlay").innerHTML = "Average: "+average;  
   
 

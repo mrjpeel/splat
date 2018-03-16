@@ -14,6 +14,7 @@
  <body>
    <img src="http://warwickcomputing.studio/splat.jpg" width=100px>
    <b><div id="greeting" class="minititle"></div></b>
+   <div id="wholeform">
    <div id="teacherfeedback">
      <h3 id="feedbackheading">Feedback</h3>
      <div class="minititle">Comments</div>
@@ -50,6 +51,7 @@
     </p>
     <div id="currentTargets"> <img width=50 src="http://warwickcomputing.studio/loading-circle.gif"></div>
   </div>
+  </div>
   </body>
   
   <script>
@@ -74,7 +76,7 @@
   btn.disabled = false;
     }
     else{
-    document.getElementById("studentcomment").innerHTML = "<h3>Awaiting to be marked</h3>";
+    document.getElementById("wholeform").innerHTML = "<h3>Awaiting to be marked by teacher</h3>";
     }
     
     
