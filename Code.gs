@@ -46,7 +46,8 @@ var WORKTITLECOLUMN = 1; // B
 var WORKMARKCOLUMN = 2; // C 
 var TEACHERCOMMENTCOLUMN = 4; // E
 var STUDENTTARGETCOLUMN = 5; // F
-
+var TARGETSTATUSCOLUMN = 6; // G
+var TARGETMETCOLUMN = 7; // H
 
 function getstudent(studentname, studentemail){
  
@@ -191,8 +192,9 @@ function getcomments() {
     
     for(var i = 0; i < allvalues.length; i++){
       var row = "";
-      currentTargets.push(allvalues[i][STUDENTTARGETCOLUMN]);
-      Logger.log("the student target is %s", allvalues[i][STUDENTTARGETCOLUMN]);
+      if (allvalues[i][TARGETSTATUSCOLUMN] == 'not met' && allvalues[i][WORKTITLECOLUMN] != hwk){
+        currentTargets.push([i,allvalues[i][STUDENTTARGETCOLUMN]]);}
+      Logger.log("the student target is %s and status is %s", allvalues[i][STUDENTTARGETCOLUMN],allvalues[i][TARGETSTATUSCOLUMN]);
         if(allvalues[i][WORKTITLECOLUMN] == hwk){
           var teachercomment = allvalues[i][TEACHERCOMMENTCOLUMN];
           var targetset = allvalues[i][STUDENTTARGETCOLUMN];
@@ -207,4 +209,32 @@ function getcomments() {
 }
 // Student Response To Sheet
 
+function updateTarget(x){
+//open SS and remove target x
+    var student = findtracker();
+ // Logger.log(student);
+  var hwk = DocumentApp.getActiveDocument().getName().split(" ", 1).toString();
+  Logger.log('Updating target %s',x);
+  
+  var filename = student[3].getName();
+  var fileid = student[3].getId();
+  
+  if(student[0]){
+    var sheetid = student[3].getId();
+    Logger.log(sheetid);    
+    var openfile = SpreadsheetApp.openById(sheetid);
+    SpreadsheetApp.setActiveSpreadsheet(openfile);    
+    var activesheet = openfile.getActiveSheet();   
+    var alldata = activesheet.getDataRange();
+    var allvalues = alldata.getValues();
+    
+    activesheet.getRange(parseInt(x)+1,TARGETMETCOLUMN+1).setValue(hwk);
+    activesheet.getRange(parseInt(x)+1,TARGETMETCOLUMN).setValue('student met');
+    
+    return x;
+  }
+  return 'failed';
+  
+  
+}
 
