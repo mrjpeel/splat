@@ -1,11 +1,15 @@
 function onOpen() {
   var ui = DocumentApp.getUi();
+  var menu = ui.createMenu('SPLAT');
   
-  ui.createMenu('SPLAT')
-  .addItem('Mark homework', 'markwork_')
-  .addItem('Review homework', 'response_')
-  .addItem('View all feedback', 'feedback_')
-  .addToUi();
+    menu.addItem('Mark homework', 'markwork_');  
+  menu.addItem('Review homework', 'response_');
+  menu.addItem('View all feedback', 'feedback_');
+  menu.addItem('About','about_');
+  menu.addToUi();
+ 
+ 
+  
   
 }
 
@@ -26,9 +30,27 @@ function response_() {
 }
 
 function feedback_(){
-  var ui = HtmlService.createHtmlOutputFromFile('summary')
-  .setTitle('View All Feedback');
-  DocumentApp.getUi().showSidebar(ui);
+//  var ui = HtmlService.createHtmlOutputFromFile('summary')
+//  .setTitle('View All Feedback');
+//  DocumentApp.getUi().showSidebar(ui);
+   var htmlOutput = HtmlService
+     .createHtmlOutputFromFile('summary')
+     .setWidth(800)
+     .setHeight(600);
+ DocumentApp.getUi().showModalDialog(htmlOutput, 'SPLAT - View All Feedback');
+}
+
+function about_(){
+ //  var ui = HtmlService.createHtmlOutputFromFile('about')
+ // .setTitle('About SPLAT');
+ // DocumentApp.getUi().showSidebar(ui);
+ 
+  
+     var htmlOutput = HtmlService
+     .createHtmlOutputFromFile('about')
+     .setWidth(250)
+     .setHeight(300);
+ DocumentApp.getUi().showModalDialog(htmlOutput, 'About SPLAT');
   
 }
 
@@ -40,14 +62,16 @@ var fileId;
 var studentname = null;
 var studentemail = null;
 
+var teachers = ['m.colliver@warwickschool.org','j.peel@warwickschool.org'];
+
 /// CONSTANTS ///
 
 var WORKTITLECOLUMN = 1; // B
 var WORKMARKCOLUMN = 2; // C 
-var TEACHERCOMMENTCOLUMN = 4; // E
-var STUDENTTARGETCOLUMN = 5; // F
-var TARGETSTATUSCOLUMN = 6; // G
-var TARGETMETCOLUMN = 7; // H
+var TEACHERCOMMENTCOLUMN = 5; // E
+var STUDENTTARGETCOLUMN = 6; // F
+var TARGETSTATUSCOLUMN = 7; // G
+var TARGETMETCOLUMN = 8; // H
 
 function getstudent(studentname, studentemail){
  
@@ -69,6 +93,11 @@ function getstudent(studentname, studentemail){
 
 
 function findtracker(){
+  
+  if (teachers.indexOf(Session.getActiveUser().getEmail())==-1){
+   return false; 
+  }
+  
   
   var student = getstudent(studentname, studentemail);
   Logger.log('Finding tracker with %s',student[0]);
@@ -190,7 +219,7 @@ function writetosheet(formData) {
     Logger.log('going to append new row');
   //now need to add a new row
     var feedbackdate = Utilities.formatDate(new Date(), "GMT", "dd/MM/yyyy");
-    formData.unshift(feedbackdate);
+    formData.unshift("'"+feedbackdate.toString());
     formData.push('not met');
     activesheet.appendRow(formData);
     }
@@ -295,11 +324,11 @@ function addStudentComment(formData){
    
        for(var i = 0; i < allvalues.length; i++){
         if(allvalues[i][WORKTITLECOLUMN] == hwk){
-          activesheet.getRange(i+1,9).setValue(formData[0]);
+          activesheet.getRange(i+1,10).setValue(formData[0]);
           
-          var today = Utilities.formatDate(new Date(), "GMT", "dd/MM/yyyy");
-          activesheet.getRange(i+1,10).setValue(today);
-          activesheet.getRange(i+1,11).setValue(formData[1]);
+          var today = "'"+ Utilities.formatDate(new Date(), "GMT", "dd/MM/yyyy");
+          activesheet.getRange(i+1,11).setValue(today);
+          activesheet.getRange(i+1,12).setValue(formData[1]);
           return true; 
         }
        }
@@ -310,12 +339,27 @@ function addStudentComment(formData){
     
   }
   return false;
-  
-  
-  
-  
-  
-  
-  
 }
 
+function getSpreadsheetData(){
+  Logger.log('get ssheet data');
+  
+    var student = findtracker();
+ // Logger.log(student);
+    
+  var filename = student[3].getName();
+  var fileid = student[3].getId();
+  
+  if(student[0]){
+    var sheetid = student[3].getId();
+    Logger.log(sheetid);    
+    var openfile = SpreadsheetApp.openById(sheetid);
+    SpreadsheetApp.setActiveSpreadsheet(openfile);    
+    var activesheet = openfile.getActiveSheet();   
+    var alldata = activesheet.getDataRange();
+    var allvalues = alldata.getValues();  
+ 
+  return allvalues;
+  }
+  return false;
+}

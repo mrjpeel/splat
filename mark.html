@@ -7,13 +7,13 @@
        #teacherfeedback,#previoustarget{background-color:lightgrey;padding:5px;}
        #tcomment,#targetset{background-color:white;margin:5px;}
        #hwkform{background-color:lightsteelblue;padding:5px;}
-       #tracking{background-color:lightgrey;padding:5px;}
+       #tracking{background-color:lightgrey;padding:5px;vertical-align:middle;}
     </style>
   </head>
 <body>
 <img src="http://warwickcomputing.studio/splat.jpg" width=100px>
   <!-- DETAILS -->
-  <div id='tracking' style="align: center">Locating Tracking Sheet <img width=20 src="http://warwickcomputing.studio/loading-circle.gif"></div>
+  <div id='tracking'>Locating Tracking Sheet <img width=20 src="http://warwickcomputing.studio/loading-circle.gif"></div>
   <br>
   <div>
     <form id="hwkform" onsubmit="return false;">
@@ -55,7 +55,12 @@
   
   function onsuccess(details){
   
-  if(details[0]){
+  if (details == false){
+   document.getElementById('hwkform').innerHTML="<h3>Need to be a teacher</h3>";
+   return false;
+  }
+  
+  else if(details[0]){
       document.getElementById('tracking').innerHTML = '<img width=20 src="http://warwickcomputing.studio/splat_tick.png"> ' +details[2] + ' found';
       document.getElementById('number').value = details[4];
       var btn = document.getElementById("Button"); 
@@ -108,6 +113,7 @@
     formData.push(document.getElementById('number').value);
     formData.push(document.getElementById('grade').value);
     formData.push(document.getElementById('markrange').value);
+    formData.push( parseInt(document.getElementById('grade').value) / parseInt(document.getElementById('markrange').value) * 10 ); 
     formData.push(document.getElementById('review').value);
     formData.push(document.getElementById('target').value);
 
