@@ -7,6 +7,8 @@
 body{font-family:sans-serif;font-size:.8em;}
 #teacherfeedback,#previoustarget{background-color:lightgrey;padding:5px;}
 #tcomment,#targetset{background-color:white;margin:5px;}
+#studentcomment{background-color:lightsteelblue;padding:5px;}
+
 </style>
   </head>
   <body>
@@ -35,17 +37,16 @@ body{font-family:sans-serif;font-size:.8em;}
   
   <div id="rag">
   Assess how solid your understanding of the ideas covered in the homework is:<br/>
- <input type="radio" name="rag" value="red"> <span style="color:red;">RED</span>
-  <input type="radio" name="rag" value="amber" checked> <span style="color:orange;">AMBER</span>
-  <input type="radio" name="rag" value="green" > <span style="color:green;">GREEN</span> 
+ <span style="background-color:red;padding:2px;"><input type="radio" name="rag" value="red"> RED</span>
+  <span style="background-color:orange;padding:2px;"><input type="radio" name="rag" value="amber" checked> AMBER</span>
+  <span style="background-color:lime;padding:2px;"><input type="radio" name="rag" value="green" > GREEN</span> 
   </div>
 
 <br>
   
-  <button type="submit" onclick="studentresponse()" id="Button">Submit Response</button>
+  <button type="submit" onclick="studentresponse()" id="Button" disabled>Submit Response</button>
 </div>
 </form>
-  <br>
   <div id=""><p>
   <div id="previoustarget">
   <p>
@@ -61,6 +62,8 @@ body{font-family:sans-serif;font-size:.8em;}
     window.onload = function(){google.script.run.withSuccessHandler(output).getcomments();}
     
     function output(details){
+ 
+    if (details != false){
     var greeting = "Hello " + details[0].split(" ", 1);
     
     document.getElementById("greeting").innerHTML = greeting;
@@ -72,7 +75,12 @@ body{font-family:sans-serif;font-size:.8em;}
     ct += '<span id="target'+details[4][i][0]+'"><input type="checkbox" name="ct" onclick="updateTarget(\''+details[4][i][0] +'\');"> '+details[4][i][1] + '</span><br>';
     }
     document.getElementById("currentTargets").innerHTML = ct;
-    
+    var btn = document.getElementById("Button"); 
+  btn.disabled = false;
+    }
+    else{
+    document.getElementById("studentcomment").innerHTML = "<h3>Awaiting to be marked</h3>";
+    }
     
     
     }

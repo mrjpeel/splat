@@ -2,42 +2,55 @@
 <html>
   <head>
     <base target="_top">    
+
+<style>
+
+body{font-family:sans-serif;font-size:.8em;}
+#teacherfeedback,#previoustarget{background-color:lightgrey;padding:5px;}
+#tcomment,#targetset{background-color:white;margin:5px;}
+#hwkform{background-color:lightsteelblue;padding:5px;}
+
+#tracking{background-color:lightgrey;padding:5px;}
+
+</style>
   </head>
   <body>
-  <h3>SPLAT</h3>
+<img src="http://warwickcomputing.studio/splat.jpg" width=100px>
   <!-- DETAILS -->
-  <div id='tracking' style="align: center"></div>
+  <div id='tracking' style="align: center">Locating Tracking Sheet <img width=50 src="https://thumbs.gfycat.com/ImpassionedAfraidDipper-size_restricted.gif"></div>
   <br>
   <div>
-  <form id="hwkform">
-  <p>Please enter the homework name.</p>
-  <input name='number' type='text'  placeholder='e.g HWK 1'/>
+  <form id="hwkform" onsubmit="return false;">
+  Homework: <input id="number" name='number' type='text'  placeholder='e.g HWK 1' disabled/>
   <p>Please enter the grade for this work</p>
-  <input name='grade' type='text' size="7"/>  out of  <input name='markrange' type='text' size="7"/>
-  </form>
+  <input id="grade" name='grade' type='text' size="7"/>  out of  <input id='markrange' name='markrange' type='text' size="7"/>
   <br>
-  </div>
+  
   <!-- FEEDBACK -->
   <div>
   <p>Please enter review comments for student.</p>
-  <textarea name='review' rows='4' cols='37' placeholder="What went well?"></textarea> 
+  <textarea id="review" name='review' rows='4' cols='37' placeholder="What went well?"></textarea> 
   <p>Is there a specific target for the student</p>
-  <textarea name='target' rows='4' cols='37' placeholder="Even better if"></textarea>
+  <textarea id="target" name='target' rows='4' cols='37' placeholder="Even better if"></textarea>
    <p>Is there a reference website to help them?</p>
-  <textarea name='target' rows='4' cols='37' placeholder="Paste link here"></textarea>
+  <textarea name='research' rows='4' cols='37' placeholder="Paste link here"></textarea>
   </div>
   <br>
 
  <!-- SUBMIT -->
   <div>
   
-  <button type='button' onclick='google.script.run.withSuccessHandler(sheetwritten).writetosheet()'>
+  <button id="Button" type='submit' onclick='writetosheet();'>
   Submit Marking</button>
   
   </div>
+  </form>
   <br>
   <div id='written'></div>
   <script>
+  
+  //google.script.run.withSuccessHandler(sheetwritten).writetosheet()
+  
   checktrackerfile();
   function checktrackerfile(){
     var findtracker = google.script.run.withSuccessHandler(onsuccess).findtracker();
@@ -46,10 +59,8 @@
   function onsuccess(details){
   
   if(details[0]){
-      document.getElementById('tracking').style.color = '#22ee00';
-      document.getElementById('tracking').style.fontSize= '14pt';
-      document.getElementById('tracking').style.cssFloat= 'center';  
       document.getElementById('tracking').innerHTML = details[2] + ' in student folder';
+      document.getElementById('number').value = details[4];
   } else {
   document.getElementById('tracking').style.color = '#ee2200';
       document.getElementById('tracking').style.fontSize= '14pt';
@@ -62,8 +73,33 @@
   
   }
   
+  
+  function writetosheet(){
+      var inputs, index, form;
+
+form = document.getElementById('hwkform'); // or form = document.formName
+alert('boo');
+var formData = [];
+
+formData.push(document.getElementById('number').value);
+formData.push(document.getElementById('grade').value);
+formData.push(document.getElementById('markrange').value);
+formData.push(document.getElementById('review').value);
+formData.push(document.getElementById('target').value);
+
+
+var btn = document.getElementById("Button"); 
+  btn.disabled = true;
+  
+alert(formData);
+  google.script.run.withSuccessHandler(sheetwritten).writetosheet(formData);
+    
+    
+  
+  }
+  
   function sheetwritten(){
-  document.getElementById('written').innerHTML = 'Tracker Sheet Updated';
+  document.getElementById('hwkform').innerHTML = '<h3>Tracker Sheet Updated</h3>';
   }
   
     

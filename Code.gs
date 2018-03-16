@@ -85,7 +85,8 @@ function findtracker(){
     var filenext = studentfile.next()
     var stdntfile = filenext.getName();
     Logger.log("File was found %s", stdntfile);
-    return [true, student[0], stdntfile, filenext];
+     var hwk = DocumentApp.getActiveDocument().getName().split(" ", 1).toString();
+    return [true, student[0], stdntfile, filenext,hwk];
   } else {
     Logger.log("File was not found");
     createTracker();
@@ -143,12 +144,16 @@ function createTracker(){
 }  
 
 // Teachers Comments To Sheet
+
+/*
 function writetosheet(formObject) {
   
   Logger.log('writetosheet function called by button');
   
   var feedbackdate = Utilities.formatDate(new Date(), "GMT", "dd/MM/yyyy");
+  Logger.log(feedbackdate);
   var hwknumber = formObject.number;
+  Logger.log(hwknumber);
   var grade = formObject.grade;
   var comments = formObject.review;
   var targetset = formObject.target;
@@ -164,7 +169,34 @@ function writetosheet(formObject) {
   Logger.log('Current sheet is %s', tracker.getName());
 
 }
+*/
+function writetosheet(formData) {
+  
+    var student = findtracker();
+ Logger.log('writing to sheet');
+  var hwk = DocumentApp.getActiveDocument().getName().split(" ", 1).toString();
+  Logger.log(hwk);
+  
+  var filename = student[3].getName();
+  var fileid = student[3].getId();
+  Logger.log(filename, fileid);
+  
+  if(student[0]){
+    var sheetid = student[3].getId();
+    Logger.log(sheetid);    
+    var openfile = SpreadsheetApp.openById(sheetid);
+    SpreadsheetApp.setActiveSpreadsheet(openfile);    
+    var activesheet = openfile.getActiveSheet(); 
+    Logger.log('going to append new row');
+  //now need to add a new row
+    var feedbackdate = Utilities.formatDate(new Date(), "GMT", "dd/MM/yyyy");
+    formData.unshift(feedbackdate);
+    formData.push('not met');
+    activesheet.appendRow(formData);
+    }
+}
 
+  
 
 function getcomments() {
   var student = findtracker();
@@ -189,7 +221,7 @@ function getcomments() {
     
     Logger.log('The length of the tracker sheet is %s',allvalues.length);
     
-    
+    var hwkFound = false;
     for(var i = 0; i < allvalues.length; i++){
       var row = "";
       if (allvalues[i][TARGETSTATUSCOLUMN] == 'not met' && allvalues[i][WORKTITLECOLUMN] != hwk){
@@ -201,10 +233,12 @@ function getcomments() {
           var markgiven = allvalues[i][WORKMARKCOLUMN];
           Logger.log("the teachers comment is %s", teachercomment);
           Logger.log("the row number %s",i+1);   
+          hwkFound = true;
+          return [student[1], teachercomment, targetset, markgiven,currentTargets];
         }    
     }
 
-    return [student[1], teachercomment, targetset, markgiven,currentTargets];
+    return false;
   }
 }
 // Student Response To Sheet
@@ -261,25 +295,11 @@ function addStudentComment(formData){
    
        for(var i = 0; i < allvalues.length; i++){
         if(allvalues[i][WORKTITLECOLUMN] == hwk){
-          activesheet.getRange(i,9).setValue(formData[0]);
+          activesheet.getRange(i+1,9).setValue(formData[0]);
           
-          //work out date today
-          var today = new Date();
-          var dd = today.getDate();
-          var mm = today.getMonth()+1; //January is 0!
-
-          var yyyy = today.getFullYear();
-          if(dd<10){
-            dd='0'+dd;
-          } 
-          if(mm<10){
-            mm='0'+mm;
-          } 
-          var today = dd+'/'+mm+'/'+yyyy;
-          
-          
-          activesheet.getRange(i,10).setValue(today);
-          activesheet.getRange(i,11).setValue(formData[1]);
+          var today = Utilities.formatDate(new Date(), "GMT", "dd/MM/yyyy");
+          activesheet.getRange(i+1,10).setValue(today);
+          activesheet.getRange(i+1,11).setValue(formData[1]);
           return true; 
         }
        }
