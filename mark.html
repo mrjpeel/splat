@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <base target="_top">    
+  </head>
+  <body>
+  <h3>SPLAT</h3>
+  <!-- DETAILS -->
+  <div id='tracking' style="align: center"></div>
+  <br>
+  <div>
+  <form id="hwkform">
+  <p>Please enter the homework name.</p>
+  <input name='number' type='text'  placeholder='e.g HWK 1'/>
+  <p>Please enter the grade for this work</p>
+  <input name='grade' type='text'/> out of <input name='markrange' type='text'/>
+  </form>
+  <br>
+  </div>
+  <!-- FEEDBACK -->
+  <div>
+  <p>Please enter review comments for student.</p>
+  <textarea name='review' rows='4' cols='37' placeholder="What went well?"></textarea> 
+  <p>Is there a specific target for the student</p>
+  <textarea name='target' rows='4' cols='37' placeholder="Even better if"></textarea>
+   <p>Is there a reference website to help them?</p>
+  <textarea name='target' rows='4' cols='37' placeholder="Paste link here"></textarea>
+  </div>
+  <br>
+
+ <!-- SUBMIT -->
+  <div>
+  
+  <button type='button' onclick='google.script.run.withSuccessHandler(sheetwritten).writetosheet()'>
+  Submit Marking</button>
+  
+  </div>
+  <br>
+  <div id='written'></div>
+  <script>
+  checktrackerfile();
+  function checktrackerfile(){
+    var findtracker = google.script.run.withSuccessHandler(onsuccess).findtracker();
+  }
+  
+  function onsuccess(details){
+  
+  if(details[0]){
+      document.getElementById('tracking').style.color = '#22ee00';
+      document.getElementById('tracking').style.fontSize= '14pt';
+      document.getElementById('tracking').style.cssFloat= 'center';  
+      document.getElementById('tracking').innerHTML = details[2] + ' in student folder';
+  } else {
+  document.getElementById('tracking').style.color = '#ee2200';
+      document.getElementById('tracking').style.fontSize= '14pt';
+      document.getElementById('tracking').innerHTML = 'Tracker not found, being created';
+      window.setTimeout(2000);
+      document.getElementById('tracking').innerHTML = details[2] + ' tracker file is in ' + details[1] + ' Classroom folder';
+      window.setTimeout(2000);
+      checktrackerfile();
+  }
+  
+  }
+  
+  function sheetwritten(){
+  document.getElementById('written').innerHTML = 'Tracker Sheet Updated';
+  }
+  
+    
+    
+    
+  </script>
+  
+  </body>
+</html>
+
+

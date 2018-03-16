@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+  <head>
+<base target="_top">
+<style>
+
+body{font-family:sans-serif;font-size:.8em;}
+#teacherfeedback{background-color:lightgrey;padding:5px;}
+#tcomment,#targetset{background-color:white;margin:5px;}
+</style>
+  </head>
+  <body>
+<h3>SPLAT</h3>
+  <b><div id="greeting"></div></b>
+  <div id="teacherfeedback">
+  <p>
+  Teacher feedback on your work
+  </p>
+  <p>Comments
+  <div id="tcomment"> <img width=50 src="https://thumbs.gfycat.com/ImpassionedAfraidDipper-size_restricted.gif"></div>
+  </p>
+   <p>Target
+  
+  <div id="targetset"><img width=50 src="https://thumbs.gfycat.com/ImpassionedAfraidDipper-size_restricted.gif"> </div>
+  </p>
+  </div>
+  <br>
+  <div id="studentcomment">
+  
+  <p>Enter your feedback below as a response to the teachers comment.</p>
+  
+  <textarea rows="4" cols="37"></textarea>
+  
+  </div>
+  <div id="rag">
+  Assess how solid your understanding of the ideas covered in the homework is:<br/>
+ <input type="radio" name="rag" value="red"> <span style="color:red;">RED</span><br>
+  <input type="radio" name="rag" value="amber"> <span style="color:orange;">AMBER</span><br>
+  <input type="radio" name="rag" value="green" > <span style="color:green;">GREEN</span> 
+  </div>
+
+
+<br>
+  
+  <button type="submit" onclick="studentresponse()">Submit Response</button>
+  
+  <br>
+  <div id=""><p>
+  <div id="previoustarget">
+  <p>
+  Below is a list of outstanding targets.
+  Check the radio button if you feel you have met the target.
+  </p>
+  <div id="currentTargets"></div>
+  </div>
+  </body>
+  
+  <script>
+    
+    window.onload = function(){google.script.run.withSuccessHandler(output).getcomments();}
+    
+    function output(details){
+    var greeting = "Hello " + details[0].split(" ", 1);
+    
+    document.getElementById("greeting").innerHTML = greeting;
+    document.getElementById("tcomment").innerHTML = details[1];
+    document.getElementById("targetset").innerHTML = details[2];
+    
+    var ct='';
+    for (i = 1; i < details[4].length; i++) { 
+    ct += "<input type='radio' name='ct'> "+details[4][i] + "<br>";
+    }
+    document.getElementById("currentTargets").innerHTML = ct;
+    
+    
+    
+    }
+    
+    
+    function studentresponse(){
+    
+    }
+    
+    
+    </script>
+    
+    
+</html>
+
+
