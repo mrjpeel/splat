@@ -238,3 +238,64 @@ function updateTarget(x){
   
 }
 
+
+function addStudentComment(formData){
+ Logger.log('Updating comment');
+ 
+  //open SS and remove target x
+    var student = findtracker();
+ // Logger.log(student);
+  var hwk = DocumentApp.getActiveDocument().getName().split(" ", 1).toString();
+  
+  var filename = student[3].getName();
+  var fileid = student[3].getId();
+  
+  if(student[0]){
+    var sheetid = student[3].getId();
+    Logger.log(sheetid);    
+    var openfile = SpreadsheetApp.openById(sheetid);
+    SpreadsheetApp.setActiveSpreadsheet(openfile);    
+    var activesheet = openfile.getActiveSheet();   
+    var alldata = activesheet.getDataRange();
+    var allvalues = alldata.getValues();
+   
+       for(var i = 0; i < allvalues.length; i++){
+        if(allvalues[i][WORKTITLECOLUMN] == hwk){
+          activesheet.getRange(i,9).setValue(formData[0]);
+          
+          //work out date today
+          var today = new Date();
+          var dd = today.getDate();
+          var mm = today.getMonth()+1; //January is 0!
+
+          var yyyy = today.getFullYear();
+          if(dd<10){
+            dd='0'+dd;
+          } 
+          if(mm<10){
+            mm='0'+mm;
+          } 
+          var today = dd+'/'+mm+'/'+yyyy;
+          
+          
+          activesheet.getRange(i,10).setValue(today);
+          activesheet.getRange(i,11).setValue(formData[1]);
+          return true; 
+        }
+       }
+          
+    
+    
+    
+    
+  }
+  return false;
+  
+  
+  
+  
+  
+  
+  
+}
+
