@@ -1,16 +1,11 @@
 function onOpen() {
   var ui = DocumentApp.getUi();
   var menu = ui.createMenu('SPLAT');
-  
-    menu.addItem('Mark homework', 'markwork_');  
-  menu.addItem('Review homework', 'response_');
+  menu.addItem('Mark work', 'markwork_');  
+  menu.addItem('Review work', 'response_');
   menu.addItem('View all feedback', 'feedback_');
   menu.addItem('About','about_');
-  menu.addToUi();
- 
- 
-  
-  
+  menu.addToUi();  
 }
 
 
@@ -18,7 +13,6 @@ function markwork_() {
   var ui = HtmlService.createHtmlOutputFromFile('mark')
   .setTitle('Marking Section');
   DocumentApp.getUi().showSidebar(ui);
-  
 }
 
 
@@ -26,13 +20,9 @@ function response_() {
   var ui = HtmlService.createHtmlOutputFromFile('review')
   .setTitle('Review and Submit');
   DocumentApp.getUi().showSidebar(ui);
-  
 }
 
 function feedback_(){
-//  var ui = HtmlService.createHtmlOutputFromFile('summary')
-//  .setTitle('View All Feedback');
-//  DocumentApp.getUi().showSidebar(ui);
    var htmlOutput = HtmlService
      .createHtmlOutputFromFile('summary')
      .setWidth(800)
@@ -41,30 +31,25 @@ function feedback_(){
 }
 
 function about_(){
- //  var ui = HtmlService.createHtmlOutputFromFile('about')
- // .setTitle('About SPLAT');
- // DocumentApp.getUi().showSidebar(ui);
- 
-  
-     var htmlOutput = HtmlService
+  var htmlOutput = HtmlService
      .createHtmlOutputFromFile('about')
      .setWidth(250)
      .setHeight(300);
  DocumentApp.getUi().showModalDialog(htmlOutput, 'About SPLAT');
-  
 }
 
 
 /// GLOBALS ////
 
-var student;
-var fileId;
-var studentname = null;
-var studentemail = null;
+//var student;
+//var fileId;
+//var studentname = null;
+//var studentemail = null;
 
-var teachers = ['m.colliver@warwickschool.org','j.peel@warwickschool.org'];
 
 /// CONSTANTS ///
+
+var teachers = ['m.colliver@warwickschool.org','j.peel@warwickschool.org'];
 
 var WORKTITLECOLUMN = 1; // B
 var WORKMARKCOLUMN = 2; // C 
@@ -73,62 +58,50 @@ var STUDENTTARGETCOLUMN = 6; // F
 var TARGETSTATUSCOLUMN = 7; // G
 var TARGETMETCOLUMN = 8; // H
 
-function getstudent(studentname, studentemail){
- 
-    // find student based on doc
+function getStudent(){
+  // find student based on doc
   var currentdoc = DocumentApp.getActiveDocument()
   var currentid = DriveApp.getFileById(currentdoc.getId());
   var getowner = currentid.getOwner();
   var viewer = currentid.getViewers();
-  Logger.log('The id of the current doc is %s and the owner is %s', currentid,getowner.getName());
-  Logger.log('There are %s viewers',viewer.length);
   for (var i = 0; i < viewer.length; i++) {
-   Logger.log('The student is %s and their email is %s', viewer[i].getName(), viewer[i].getEmail());
     var studentname = viewer[i].getName();
     var studentemail = viewer[i].getEmail();
-   }
-  
+   }  
   return [studentname,studentemail];
 }
 
 
-function findtracker(){
-  
+function findTracker(){
+  // check if a teacher
   if (teachers.indexOf(Session.getActiveUser().getEmail())==-1){
    return false; 
   }
-  
-  
-  var student = getstudent(studentname, studentemail);
-  Logger.log('Finding tracker with %s',student[0]);
-
-
+    
+  var student = getStudent();
   var searchterm = 'title = "Classroom" and "' + student[1] + '" in owners';
-  Logger.log('Finding tracker with %s',searchterm);
-
   var classroomf = DriveApp.searchFolders(searchterm).next();
+
   Logger.log("This is the folder found %s  ", classroomf);
-  var searchterm = 'StudentTracker - ' + student[0];
+  var searchterm = 'StudentTracker - ' + student[0];          //filename of tracker sheet to be of this format
   var studentfile = classroomf.getFilesByName(searchterm);
   if(studentfile.hasNext()) {
     var filenext = studentfile.next()
     var stdntfile = filenext.getName();
     Logger.log("File was found %s", stdntfile);
-     var hwk = DocumentApp.getActiveDocument().getName().split(" ", 1).toString();
+    var hwk = DocumentApp.getActiveDocument().getName().split(" ", 1).toString();
     return [true, student[0], stdntfile, filenext,hwk];
   } else {
     Logger.log("File was not found");
     createTracker();
     return false;
   }
-  
-
 }
 
 
 function createTracker(){
   
-  var student = getstudent(studentname, studentemail);
+  var student = getStudent(studentname, studentemail);
   
   Logger.log('Creating sheet for %s, %s', student[0], student[1]);
 
@@ -160,16 +133,18 @@ function createTracker(){
   
   //Feedback Date	Piece of Work	Mark	Teacher Comment	My Target	RAG
   
-  tracker.getRange('A1').setValue('Feedback Date');
- // tracker.getRange('A2').setValue(Utilities.formatDate(new Date(), "GMT", "dd/MM/yyyy"));
+  tracker.getRange('A1').setValue('Teacher Marked');
   tracker.getRange('B1').setValue('Piece of Work');
   tracker.getRange('C1').setValue('Mark');
-  tracker.getRange('D1').setValue('Teacher Comment');
-  tracker.getRange('E1').setValue('My Target');
-  tracker.getRange('F1').setValue('Student Response');
-  tracker.getRange('G1').setValue('Response Date');
-  tracker.getRange('H1').setValue('RAG');
-    
+  tracker.getRange('D1').setValue('Mark Range');
+  tracker.getRange('E1').setValue('Rel Mark');
+  tracker.getRange('F1').setValue('Teacher Comment');
+  tracker.getRange('G1').setValue('Student Target');
+  tracker.getRange('H1').setValue('Target Status');
+  tracker.getRange('I1').setValue('Target Met Against');
+  tracker.getRange('J1').setValue('Student Response');
+  tracker.getRange('K1').setValue('Student Response Date');
+  tracker.getRange('L1').setValue('RAG');
 }  
 
 // Teachers Comments To Sheet
@@ -201,8 +176,35 @@ function writetosheet(formObject) {
 */
 function writetosheet(formData) {
   
-    var student = findtracker();
- Logger.log('writing to sheet');
+  //could do validation here on form/server 
+  // formdata[0] - hwk name
+  // formdata[1] - mark
+  // formdata[2] - out of
+  // formdata[3] - rel mark
+  // formdata[4] - comment
+  // formdata[5] - target
+  
+  var mark = parseInt(formData[1]);
+  var outof = parseInt(formData[2]);
+  
+  var errorMsg = '';
+  if (isNaN(mark)) {errorMsg+='Mark needs to be an integer\n';}
+  if (isNaN(outof)) {errorMsg+='Out of needs to be an integer\n';}
+  if (errorMsg.length==0 && mark>outof) {errorMsg+='Mark can not be greater than out of\n';}
+  if (formData[4].length==0) {errorMsg+='Comment needs to be filled in\n';}
+  if (formData[5].length==0) {errorMsg+='Target needs to be filled in\n';}
+  
+  if (errorMsg.length>0){
+  var ui = DocumentApp.getUi();
+  ui.alert('Validation Error', 'Please correct the following problems:\n'+errorMsg, ui.ButtonSet.OK);
+  return false;
+  }
+  
+  //calculate rel mark
+  formData[3] = (mark/outof*10).toFixed(2);  
+
+  var student = findTracker();
+  Logger.log('writing to sheet');
   var hwk = DocumentApp.getActiveDocument().getName().split(" ", 1).toString();
   Logger.log(hwk);
   
@@ -222,13 +224,14 @@ function writetosheet(formData) {
     formData.unshift("'"+feedbackdate.toString());
     formData.push('not met');
     activesheet.appendRow(formData);
+    return true;
     }
 }
 
   
 
 function getcomments() {
-  var student = findtracker();
+  var student = findTracker();
  // Logger.log(student);
   var hwk = DocumentApp.getActiveDocument().getName().split(" ", 1).toString();
   Logger.log(hwk);
@@ -274,7 +277,7 @@ function getcomments() {
 
 function updateTarget(x){
 //open SS and remove target x
-    var student = findtracker();
+    var student = findTracker();
  // Logger.log(student);
   var hwk = DocumentApp.getActiveDocument().getName().split(" ", 1).toString();
   Logger.log('Updating target %s',x);
@@ -306,7 +309,7 @@ function addStudentComment(formData){
  Logger.log('Updating comment');
  
   //open SS and remove target x
-    var student = findtracker();
+    var student = findTracker();
  // Logger.log(student);
   var hwk = DocumentApp.getActiveDocument().getName().split(" ", 1).toString();
   
@@ -344,7 +347,7 @@ function addStudentComment(formData){
 function getSpreadsheetData(){
   Logger.log('get ssheet data');
   
-    var student = findtracker();
+    var student = findTracker();
  // Logger.log(student);
     
   var filename = student[3].getName();

@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <base target="_top">
+ <link rel="stylesheet" href="https://ssl.gstatic.com/docs/script/css/add-ons1.css">
+ <base target="_top">
 <style>
-h1{font-family:sans-serif;}
+
 
 .chartWithOverlay {
     position: relative;
@@ -12,11 +13,9 @@ h1{font-family:sans-serif;}
 }
 #overlay {
     display:none;
-    font-family:sans-serif;
-    font-size:0.8em;
     padding:10px;
     background-color:lightgrey;
-    width: 80px;
+    width: 100px;
     height: 1em;
     position: absolute;
     bottom: 110px;  /* chartArea top  */
@@ -36,7 +35,8 @@ h1{font-family:sans-serif;}
 
 </div>
   <div id="test_dataview"></div>
-  </body>
+<button class="action" type="button" value="Close" onclick="google.script.host.close()">Close</button>
+</body>
 </html>
 
  <script>
@@ -73,8 +73,9 @@ h1{font-family:sans-serif;}
     chart.draw(hwkmarks, options);
   var tablerows = data.getNumberOfRows();
       for (i = 0; i < tablerows; i++) { 
-data.setProperty(i,11,'style','background-color: '+data.getValue(i,11)+';');
-
+data.setProperty(i,11,'style','background-color: '+ (data.getValue(i,11)=='amber'?'orange':data.getValue(i,11)) +';color:white;');
+//data.getValue(i,11)=='amber'?'orange':data.getValue(i,11)
+//data.getValue(i,11)
    }
   
   //data.setCell(1, 0,'10', '10', {style: 'font-style:bold; font-size:22px;'});
