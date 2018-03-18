@@ -22,10 +22,24 @@
     right: 0px; /* chartArea left */
     
 }
+#nameheader {
+   float:right;
+}
+
+#name {
+    display:inline;
+    font-size:2em;
+}
+
+
 
 </style>
 </head>
   <body>
+  <div id="nameheader">
+  <img src="http://warwickcomputing.studio/splat.jpg" width=100px>
+  </div>
+  <div id="name"></div>
     <div class="chartWithOverlay">
 
  <div id="line-chart" ><img width=100 src="http://warwickcomputing.studio/loading-circle.gif"></div>
@@ -49,11 +63,11 @@
    window.onload = function(){google.script.run.withSuccessHandler(drawChart).getSpreadsheetData();}
  
    function drawChart(rows) {
-   //document.getElementById("line-chart").innerHTML = "Boo";
+   document.getElementById("name").innerHTML = rows[0];
    
         var chart = new google.visualization.LineChart(document.getElementById('line-chart'));
 
-   var data = google.visualization.arrayToDataTable(rows, false);
+   var data = google.visualization.arrayToDataTable(rows[1], false);
         var hwkmarks = new google.visualization.DataView(data);
       hwkmarks.setColumns([1,4]);
    var options = {'title':'Assessment scores (scaled to out of 10)',
@@ -61,7 +75,8 @@
                      'height':300,
                      
                      vAxis: { title: "Mark", minValue: 0, maxValue: 10},
-                     hAxis: {title: "Homework",showTextEvery:1},
+                     hAxis: {title: "Homework",showTextEvery:1,slantedText: true, 
+        slantedTextAngle: 90},
                      animation: {"startup": true},
                      legend: 'none',
                      pointSize: 5

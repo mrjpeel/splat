@@ -73,6 +73,10 @@ function getStudent(){
 
 
 function findTracker(){
+
+  Logger.log("In findTracker");
+
+
   // check if a teacher
   if (teachers.indexOf(Session.getActiveUser().getEmail())==-1){
    return false; 
@@ -362,7 +366,7 @@ function getSpreadsheetData(){
     var alldata = activesheet.getDataRange();
     var allvalues = alldata.getValues();  
  
-  return allvalues;
+  return [student[1],allvalues];
   }
   return false;
 }

@@ -5,17 +5,16 @@
 
     <base target="_top">    
     <style>
-       body{font-family:sans-serif;font-size:.8em;}
-       #teacherfeedback,#previoustarget{background-color:lightgrey;padding:5px;}
-       #tcomment,#targetset{background-color:white;margin:5px;}
        #hwkform{background-color:lightsteelblue;padding:5px;}
        #tracking{background-color:lightgrey;padding:5px;vertical-align:middle;}
     </style>
   </head>
 <body>
-<img src="http://warwickcomputing.studio/splat.jpg" width=100px>
+
+<div class="sidebar">
+  <img src="http://warwickcomputing.studio/splat.jpg" width=100px>
   <!-- DETAILS -->
-  <div id='tracking'>Locating Tracking Sheet <img width=20 src="http://warwickcomputing.studio/loading-circle.gif"></div>
+  <div class="block" id='tracking'>Locating Tracking Sheet <img width=20 src="http://warwickcomputing.studio/loading-circle.gif"></div>
   <br>
   <div>
     <form id="hwkform" onsubmit="return false;">
@@ -25,18 +24,24 @@
       <br>
   
       <!-- FEEDBACK -->
-      <div>
-        <p>Please enter review comments for student.</p>
-        <textarea id="review" name='review' rows='4' cols='37' placeholder="What went well?"></textarea> 
-        <p>Is there a specific target for the student</p>
-        <textarea id="target" name='target' rows='4' cols='37' placeholder="Even better if"></textarea>
+      <br/>
+        <div class="block form-group">
+          <label for="review">Review comments for student:</label>
+          <textarea id="review" rows="4" cols="33" placeholder="What went well?"></textarea> 
+        </div>
+        <div class="block form-group">
+          <label for="target">Specific target for student:</label>
+          <textarea id="target" rows="4" cols="33" placeholder="Even better if..."></textarea>
+        </div>
+      
+ <!--
         <p>Is there a reference website to help them?</p>
         <textarea name='research' rows='4' cols='37' placeholder="Paste link here"></textarea>
       </div>
       <br>
-
+-->
       <!-- SUBMIT -->
-      <div>
+      <div class="block">
         <button class="action" id="Button" type='submit' onclick='writetosheet();' disabled>Submit Marking</button>
   
       </div>
@@ -45,14 +50,14 @@
   </div>
   
   
-  
+ </div> 
 <script>
   
   //google.script.run.withSuccessHandler(sheetwritten).writetosheet()
   
   checktrackerfile();
   function checktrackerfile(){
-    var findtracker = google.script.run.withSuccessHandler(onsuccess).findtracker();
+    var findtracker = google.script.run.withSuccessHandler(onsuccess).findTracker();
   }
   
   function onsuccess(details){

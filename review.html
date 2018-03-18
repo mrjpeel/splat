@@ -5,7 +5,6 @@
 
     <base target="_top">
     <style>
-      body{font-family:sans-serif;font-size:.8em;}
       #teacherfeedback,#previoustarget{background-color:lightgrey;padding:1px 5px;}
       #tcomment,#targetset{background-color:white;margin:5px;}
       #studentcomment{background-color:lightsteelblue;padding:5px;}
@@ -14,6 +13,7 @@
     </style>
  </head>
  <body>
+ <div class="sidebar">
    <img src="http://warwickcomputing.studio/splat.jpg" width=100px>
    <b><div id="greeting" class="minititle"></div></b>
    <div id="wholeform">
@@ -30,7 +30,7 @@
     <div id="studentcomment">
       <h3>Reflection</h3>
       <p>Enter your reflection below as a response to the teachers comment.</p>
-      <textarea id="studcomment" rows="4" cols="37"></textarea>
+      <textarea id="studcomment" rows="4" cols="33"></textarea>
    
       <div id="rag">
         Assess how solid your understanding of the ideas covered in the homework is:<br/>
@@ -52,6 +52,7 @@
       Check the box if you feel you have met the target in this homework.
     </p>
     <div id="currentTargets"> <img width=20 src="http://warwickcomputing.studio/loading-circle.gif"></div>
+  </div>
   </div>
   </div>
   </body>
