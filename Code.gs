@@ -23,9 +23,12 @@ function response_() {
 }
 
 function feedback_(){
-   var htmlOutput = HtmlService
+  // var width = window.innerWidth || document.body.clientWidth;
+  // width = wdith *0.8;
+  width =800; 
+  var htmlOutput = HtmlService
      .createHtmlOutputFromFile('summary')
-     .setWidth(800)
+     .setWidth(width)
      .setHeight(600);
  DocumentApp.getUi().showModalDialog(htmlOutput, 'SPLAT - View All Feedback');
 }
@@ -266,7 +269,7 @@ function getcomments() {
         if(allvalues[i][WORKTITLECOLUMN] == hwk){
           var teachercomment = allvalues[i][TEACHERCOMMENTCOLUMN];
           var targetset = allvalues[i][STUDENTTARGETCOLUMN];
-          var markgiven = allvalues[i][WORKMARKCOLUMN];
+          var markgiven = allvalues[i][WORKMARKCOLUMN] + " out of " +allvalues[i][3] ;
           Logger.log("the teachers comment is %s", teachercomment);
           Logger.log("the row number %s",i+1);   
           hwkFound = true;

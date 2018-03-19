@@ -6,7 +6,7 @@
     <base target="_top">
     <style>
       #teacherfeedback,#previoustarget{background-color:lightgrey;padding:1px 5px;}
-      #tcomment,#targetset{background-color:white;margin:5px;}
+      #tcomment,#targetset,#mark{background-color:white;margin:5px;padding:0 2px;}
       #studentcomment{background-color:lightsteelblue;padding:5px;}
       h3{margin:0px;}
       .minititle{margin:5px;}
@@ -23,7 +23,10 @@
      <div id="tcomment"> <img width=20 src="http://warwickcomputing.studio/loading-circle.gif"></div>
      <div class="minititle">Target</div>
      <div id="targetset"> <img width=20 src="http://warwickcomputing.studio/loading-circle.gif"> </div>
-   </div>
+     <div class="minititle">Mark</div>
+     <div id="mark"> <img width=20 src="http://warwickcomputing.studio/loading-circle.gif"> </div>
+
+</div>
   <br>
   
   <form id="myFormId" onsubmit="return false;">
@@ -69,6 +72,7 @@
     document.getElementById("greeting").innerHTML = greeting;
     document.getElementById("tcomment").innerHTML = details[1];
     document.getElementById("targetset").innerHTML = details[2];
+    document.getElementById("mark").innerHTML = details[3];
     document.getElementById("feedbackheading").innerHTML = "Feedback for "+details[5];
     var ct='';
     for (i = 0; i < details[4].length; i++) { 
@@ -113,10 +117,7 @@ for (index = 0; index < inputs.length; ++index) {
   btn.disabled = true;
   google.script.run.withSuccessHandler(studentCommentUpdated).addStudentComment(formData);
     
-    
-    
     }
-    
     
     function studentCommentUpdated(success){
     if (success){
