@@ -62,7 +62,7 @@
   
   <script>
     
-    window.onload = function(){google.script.run.withSuccessHandler(output).getcomments();}
+    window.onload = function(){google.script.run.withSuccessHandler(output).getCommentsFromFirebase();}
     
     function output(details){
     
@@ -116,7 +116,7 @@ for (index = 0; index < inputs.length; ++index) {
 }
   var btn = document.getElementById("Button"); 
   btn.disabled = true;
-  google.script.run.withSuccessHandler(studentCommentUpdated).addStudentComment(formData);
+  google.script.run.withSuccessHandler(studentCommentUpdated).addStudentCommentToFirebase(formData);
     
     }
     

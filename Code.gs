@@ -262,7 +262,48 @@ function writetosheet(formData) {
     }
 }
 
+
+function getCommentsFromFirebase() {
+  Logger.log("\n Trying to load comments for student \n");
   
+  //part of the REVIEW page - function gets comments for a homework and returns data to review.html
+ 
+  //var student = findTracker(); //do we need this now - we just need the students email 
+  var student = getStudent();
+  var hwk = DocumentApp.getActiveDocument().getName().split(" ", 1).toString();
+  Logger.log(hwk);
+
+  //get values from Firebase for this piece of work  
+  var fbdb = firebaseconnect();
+  
+  if(fbdb){
+    Logger.log("found");
+  } else {
+    Logger.log("fbdb does not exist");
+  }
+  
+  var studentemail = student[1].split("@", 1).toString();
+  var email = studentemail.replace(".","_");
+  var path = email + "/ComputerScience/" + hwk; 
+  Logger.log("the path used to retrieve the data will be\n%s", path);
+  var thedata = fbdb.getData(path);
+  Logger.log("\n\nFrom Firebase\n%s\nReturned data is \n%s", email, thedata ); 
+  
+  Logger.log(thedata.Mark);
+  
+  
+  var teachercomment = thedata["Teacher comment"];
+  var targetset = thedata["Student target"];
+  var markgiven = thedata["Mark"] + " out of " + thedata["Mark range"] ;
+  var currentTargets = [];
+  Logger.log("teacher comment: %s", teachercomment);
+  
+  //not getting all previous targets at the moment - need to rethink Firebase query and grab all data
+  
+  return [student[0], teachercomment, targetset, markgiven,currentTargets,hwk];
+
+}
+
 
 function getcomments() {
   var student = findTracker();
@@ -334,6 +375,33 @@ function updateTarget(x){
     return x;
   }
   return 'failed';
+  
+  
+}
+
+
+function addStudentCommentToFirebase(formData){
+ Logger.log('Updating comment');
+
+var student = getStudent();
+var hwk = DocumentApp.getActiveDocument().getName().split(" ", 1).toString();
+  
+  //now setup data ready for Firebase
+  var fbdb = firebaseconnect();
+  
+  var student = getStudent();
+  var studentemail = student[1].split("@", 1).toString();
+  var email = studentemail.replace(".","_");
+  var path = email + "/ComputerScience/" + hwk +"/";  // path can be email for all user or email + "/subject" for specific
+  Logger.log("the path used to push the data will be\n%s", path);
+  
+  var feedbackdate = Utilities.formatDate(new Date(), "GMT", "dd/MM/yyyy").toString();
+  //might still need the ' ?
+  
+  var data = {"Student response data" : feedbackdate, "Student response" : formData[0], "RAG":formData[1]};
+  Logger.log(fbdb.updateData(path, data));
+  return true;
+  
   
   
 }
