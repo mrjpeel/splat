@@ -63,10 +63,12 @@ var TARGETMETCOLUMN = 8; // H
 
 function getStudent(){
   // find student based on doc
+   Logger.log("In getStudent");
   var currentdoc = DocumentApp.getActiveDocument()
   var currentid = DriveApp.getFileById(currentdoc.getId());
   var getowner = currentid.getOwner();
   var viewer = currentid.getViewers();
+  Logger.log("In getStudent - viewers %s",viewer.length);
   for (var i = 0; i < viewer.length; i++) {
     var studentname = viewer[i].getName();
     var studentemail = viewer[i].getEmail();
@@ -87,6 +89,9 @@ function findTracker(){
     
   var student = getStudent();
   var searchterm = 'title = "Classroom" and "' + student[1] + '" in owners';
+  
+   Logger.log("In findTracker and search term is %s",searchterm);
+  
   var classroomf = DriveApp.searchFolders(searchterm).next();
 
   Logger.log("This is the folder found %s  ", classroomf);
@@ -367,9 +372,67 @@ function getSpreadsheetData(){
     SpreadsheetApp.setActiveSpreadsheet(openfile);    
     var activesheet = openfile.getActiveSheet();   
     var alldata = activesheet.getDataRange();
-    var allvalues = alldata.getValues();  
+    var allvalues = alldata.getValues();
  
   return [student[1],allvalues];
   }
   return false;
+}
+
+
+// TEST OF FIREBASE //
+function tofirebase(){
+  var data = getSpreadsheetData();
+  var fburl = "https://splat-ebd62.firebaseio.com/";
+  var fbsecret = "dmncbyHH6zJ9NKkGaeh9lNdYFu3Q9IDsfOWFSAJI";
+  var fbdb = FirebaseApp.getDatabaseByUrl(fburl, fbsecret);
+  var jsonify = getJsonArrayFromData(data[1]);
+  var path = 'Upper4th/' + data[0];
+  fbdb.setData(path, jsonify);
+  
+}
+
+
+function getJsonArrayFromData(data)
+{
+
+  var obj = {};
+  var result = [];
+  var headers = data[0];
+  var cols = headers.length;
+  var row = [];
+
+  for (var i = 1, l = data.length; i < l; i++)
+  {
+    // get a row to fill the object
+    row = data[i];
+    // clear object
+    obj = {};
+    for (var col = 0; col < cols; col++) 
+    {
+      // fill object with new values
+      obj[headers[col]] = row[col];    
+    }
+    // add object in a final result
+    result.push(obj);  
+  }
+
+  return result;  
+
+}
+
+
+
+// TEST OF FIRESTORE //
+function tofirestore() {
+  var data = getSpreadsheetData();
+  var fbemail = "splatadmin@project-id-5741585312871050576.iam.gserviceaccount.com";
+  var fbsecret = "d38bf0f116851fecde17e4763a6c6b4d73d31c57";
+  var fbprojectid = "project-id-5741585312871050576";
+  
+  Logger.log(data.feed.entry[0]['gsx$title']['$t']);
+  
+  FirestoreApp.createDocumentWithId("Lower5th", data[0], data[1], fbemail, fbsecret, fbprojectid);
+  
+  
 }
