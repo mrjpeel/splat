@@ -60,10 +60,16 @@
 
 
 
-   window.onload = function(){google.script.run.withSuccessHandler(drawChart).getSpreadsheetData();}
+   window.onload = function(){google.script.run.withSuccessHandler(drawChart).getFirebaseData();}
  
    function drawChart(rows) {
    document.getElementById("name").innerHTML = rows[0];
+   
+   if (!rows[1]){
+     document.getElementById("line-chart").innerHTML = "<h3>No data currently in SPLAT</h3>";  
+   
+   }
+   else{
    
         var chart = new google.visualization.LineChart(document.getElementById('line-chart'));
 
@@ -112,7 +118,7 @@ var targets = new google.visualization.DataView(data);
     document.getElementById("overlay").style.display = "block";
     document.getElementById("overlay").innerHTML = "Average: "+average;  
   
-
+}
   
  
     }  

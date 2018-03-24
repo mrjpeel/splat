@@ -63,6 +63,7 @@
   function onsuccess(details){
   
   if (details == false){
+   document.getElementById('tracking').innerHTML = '';
    document.getElementById('hwkform').innerHTML="<h3>Need to be a teacher</h3>";
    return false;
   }
@@ -74,12 +75,9 @@
       btn.disabled = false;
 
   } else {
-  document.getElementById('tracking').style.color = '#ee2200';
-      document.getElementById('tracking').innerHTML = 'Tracker not found, being created';
-      window.setTimeout(2000);
-      document.getElementById('tracking').innerHTML ='<img width=20 src="http://warwickcomputing.studio/splat_tick.png">' +details[2] + ' tracker file is in ' + details[1] + ' Classroom folder';
-      window.setTimeout(2000);
-      checktrackerfile();
+ 
+      document.getElementById('tracking').innerHTML = '<img width=20 src="http://warwickcomputing.studio/splat_tick.png"> ' +details[2] + ' found';
+     document.getElementById('hwkform').innerHTML = "ALREADY MARKED";
   }
   
   }

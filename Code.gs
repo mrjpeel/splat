@@ -89,9 +89,33 @@ function findTracker(){
   }
   
   //as we move to firebase not all checks are so necessary as should create students the first time we add data....
+  //but we could check to see if homework has already been marked
+
+  var student = getStudent();
 
   
-  var student = getStudent();
+  var hwk = DocumentApp.getActiveDocument().getName().split(" ", 1).toString();
+  
+  //quick search to see if already marked
+  //get values from Firebase for this piece of work  
+  var fbdb = firebaseconnect();
+ 
+  var studentemail = student[1].split("@", 1).toString();
+  var email = studentemail.replace(".","_");
+  var path = email + "/ComputerScience/" + hwk; 
+  Logger.log("the path used to retrieve the data will be\n%s", path);
+  var thedata = fbdb.getData(path);
+  Logger.log("\n\nFrom Firebase\n%s\nReturned data is \n%s", email, thedata ); 
+  
+  //check for Firebase data (homework might not be marked yet)
+  if (thedata != null) {return [false, student, 'SPLAT data', '',hwk];}
+  
+  
+  
+  return [true, student, 'SPLAT data', '',hwk];
+
+
+/*
   var searchterm = 'title = "Classroom" and "' + student[1] + '" in owners';
   
   Logger.log("In findTracker the search term is \n%s  \n\n",searchterm);
@@ -112,6 +136,8 @@ function findTracker(){
     createTracker();
     return false;
   }
+
+*/
 }
 
 
@@ -197,7 +223,7 @@ function writeToFirebase(formData){
   var feedbackdate = Utilities.formatDate(new Date(), "GMT", "dd/MM/yyyy").toString();
   //might still need the ' ?
   
-  var data = {"Teacher Marked" : feedbackdate, "Piece of work" : formData[0], "Mark":formData[1], "Mark Range":formData[2],"Rel mark":formData[3],"Teacher comment":formData[4],"Student target":formData[5]};
+  var data = {"Teacher marked" : feedbackdate, "Piece of work" : formData[0], "Mark":formData[1], "Mark range":formData[2],"Rel mark":formData[3],"Teacher comment":formData[4],"Student target":formData[5]};
   Logger.log(fbdb.setData(path, data));
   return true;
   
@@ -289,8 +315,8 @@ function getCommentsFromFirebase() {
   var thedata = fbdb.getData(path);
   Logger.log("\n\nFrom Firebase\n%s\nReturned data is \n%s", email, thedata ); 
   
-  Logger.log(thedata.Mark);
-  
+  //check for Firebase data (homework might not be marked yet)
+  if (thedata == null) {return false;}
   
   var teachercomment = thedata["Teacher comment"];
   var targetset = thedata["Student target"];
@@ -439,6 +465,45 @@ function addStudentComment(formData){
        }
   }
   return false;
+}
+
+
+function getFirebaseData(){
+  Logger.log('\n____________\nGet S_sheet Data\n_____________');
+  
+  var student = getStudent();
+  
+ //now setup data ready for Firebase
+  var fbdb = firebaseconnect();
+
+  var studentemail = student[1].split("@", 1).toString();
+  var email = studentemail.replace(".","_");
+  var path = email + "/ComputerScience/" ;  // path can be email for all user or email + "/subject" for specific
+  Logger.log("the path used to retrieve the data will be\n%s", path);  
+
+  var thedata = fbdb.getData(path);
+  Logger.log("\n\nFrom Firebase\n%s\nReturned data is \n%s", email, thedata ); 
+  
+  //check if any data returned (Firebase might not be setup for this student
+  if (thedata == null) {return [student[0], false];}
+  
+  //need to setup data structure ready for charting
+  
+  data=[];
+  columnheaders = ["Teacher marked","Piece of work","Mark","Mark range","Rel mark","Teacher comment","Student target","Target status","Target met against","S R","S R D","RAG"];
+  data.push(columnheaders);
+ //loop to read through data and put into data structure for charting
+  //data.push(["12/2/2018","HWK12",10,12,9.8,"boo","boo","met","boo","2/3","2/3","red"]);
+  for(var i in thedata) {
+    data.push([ thedata[i]["Teacher marked"],thedata[i]["Piece of work"],thedata[i]["Mark"],thedata[i]["Mark range"],parseFloat(thedata[i]["Rel mark"]),
+               thedata[i]["Teacher comment"],thedata[i]["Student target"],"met","boo","2/3","2/3",thedata[i]["RAG"]]);
+  }
+  
+  
+  Logger.log("Data being sent back %s",data);
+  
+  //return values to caller
+  return [student[0], data];
 }
 
 
