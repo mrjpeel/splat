@@ -90,6 +90,7 @@
     
     function updateTarget(x){
     //now need to mark spreadsheet as target met with this homework title (x is the row from the spreadsheet)
+    // x is now the name of the homework since changing to Firebase
     google.script.run.withSuccessHandler(targetUpdated).updateTarget(x);
     
     

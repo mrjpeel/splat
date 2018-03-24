@@ -78,6 +78,13 @@ function getStudent(){
 }
 
 
+function getCodeForWork(){
+  //work to have a code for the tracker: HWKx , CWKx, TSTx
+  //if set via classroom it will follow the student name
+  return DocumentApp.getActiveDocument().getName().split(" - ")[1].toString();
+}
+
+
 function findTracker(){
 
   Logger.log("\n______________\nIn findTracker\n______________\n");
@@ -94,8 +101,8 @@ function findTracker(){
   var student = getStudent();
 
   
-  var hwk = DocumentApp.getActiveDocument().getName().split(" ", 1).toString();
-  
+  //var hwk = DocumentApp.getActiveDocument().getName().split(" ", 1).toString();
+  var hwk = getCodeForWork();
   //quick search to see if already marked
   //get values from Firebase for this piece of work  
   var fbdb = firebaseconnect();
@@ -223,7 +230,7 @@ function writeToFirebase(formData){
   var feedbackdate = Utilities.formatDate(new Date(), "GMT", "dd/MM/yyyy").toString();
   //might still need the ' ?
   
-  var data = {"Teacher marked" : feedbackdate, "Piece of work" : formData[0], "Mark":formData[1], "Mark range":formData[2],"Rel mark":formData[3],"Teacher comment":formData[4],"Student target":formData[5]};
+  var data = {"Teacher marked" : feedbackdate, "Piece of work" : formData[0], "Mark":formData[1], "Mark range":formData[2],"Rel mark":formData[3],"Teacher comment":formData[4],"Student target":formData[5],"Target status":"not met"};
   Logger.log(fbdb.setData(path, data));
   return true;
   
@@ -289,6 +296,8 @@ function writetosheet(formData) {
 }
 
 
+
+
 function getCommentsFromFirebase() {
   Logger.log("\n Trying to load comments for student \n");
   
@@ -296,7 +305,8 @@ function getCommentsFromFirebase() {
  
   //var student = findTracker(); //do we need this now - we just need the students email 
   var student = getStudent();
-  var hwk = DocumentApp.getActiveDocument().getName().split(" ", 1).toString();
+  //var hwk = DocumentApp.getActiveDocument().getName().split(" ", 1).toString();
+   var hwk = getCodeForWork();
   Logger.log(hwk);
 
   //get values from Firebase for this piece of work  
@@ -325,6 +335,19 @@ function getCommentsFromFirebase() {
   Logger.log("teacher comment: %s", teachercomment);
   
   //not getting all previous targets at the moment - need to rethink Firebase query and grab all data
+  // lets grab all comments here for now but come up with a better way later :-)
+  path = email + "/ComputerScience/";  //now grab all work data 
+  Logger.log("the path used to retrieve the data will be\n%s", path);
+  thedata = fbdb.getData(path);
+  Logger.log("\n\nFrom Firebase\n%s\nReturned data is \n%s", email, thedata ); 
+
+  for(var i in thedata) {
+    Logger.log("Target is %s", thedata[i]["Student target"] ); 
+
+    if (thedata[i]["Target status"] == "not met" && thedata[i]["Piece of work"] != hwk) { currentTargets.push([thedata[i]["Piece of work"],thedata[i]["Student target"]]); }
+  }
+  
+  
   
   return [student[0], teachercomment, targetset, markgiven,currentTargets,hwk];
 
@@ -334,7 +357,8 @@ function getCommentsFromFirebase() {
 function getcomments() {
   var student = findTracker();
  // Logger.log(student);
-  var hwk = DocumentApp.getActiveDocument().getName().split(" ", 1).toString();
+ // var hwk = DocumentApp.getActiveDocument().getName().split(" ", 1).toString();
+   var hwk = getCodeForWork();
   Logger.log(hwk);
   
   var filename = student[3].getName();
@@ -377,7 +401,26 @@ function getcomments() {
 // Student Response To Sheet
 
 function updateTarget(x){
-//open SS and remove target x
+//updated for Firebase
+ // var hwk = DocumentApp.getActiveDocument().getName().split(" ", 1).toString();  
+   var hwk = getCodeForWork();
+  var student = getStudent();
+  //get values from Firebase for this piece of work  
+  var fbdb = firebaseconnect();
+  
+  var studentemail = student[1].split("@", 1).toString();
+  var email = studentemail.replace(".","_");
+  var path = email + "/ComputerScience/" + x;
+
+  var data = {"Target status" : "met", "Target met against" : hwk};
+  Logger.log(fbdb.updateData(path, data));
+  return x;
+  
+    
+  
+  
+/*  
+  //open SS and remove target x
     var student = findTracker();
   
   var hwk = DocumentApp.getActiveDocument().getName().split(" ", 1).toString();
@@ -401,7 +444,7 @@ function updateTarget(x){
     return x;
   }
   return 'failed';
-  
+*/  
   
 }
 
@@ -410,7 +453,8 @@ function addStudentCommentToFirebase(formData){
  Logger.log('Updating comment');
 
 var student = getStudent();
-var hwk = DocumentApp.getActiveDocument().getName().split(" ", 1).toString();
+//var hwk = DocumentApp.getActiveDocument().getName().split(" ", 1).toString();
+   var hwk = getCodeForWork();
   
   //now setup data ready for Firebase
   var fbdb = firebaseconnect();
@@ -439,7 +483,8 @@ function addStudentComment(formData){
   //open SS and remove target x
     var student = findTracker();
  // Logger.log(student);
-  var hwk = DocumentApp.getActiveDocument().getName().split(" ", 1).toString();
+//  var hwk = DocumentApp.getActiveDocument().getName().split(" ", 1).toString();
+   var hwk = getCodeForWork();
   
   var filename = student[3].getName();
   var fileid = student[3].getId();
