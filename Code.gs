@@ -61,9 +61,17 @@ var STUDENTTARGETCOLUMN = 6; // F
 var TARGETSTATUSCOLUMN = 7; // G
 var TARGETMETCOLUMN = 8; // H
 
+
+
 function getStudent(){
-  // find student details based on current doc - function run by teacher so student is a viewer
+  // find student details based on current doc - 
+  // if 'turned in' then function run by teacher and is owner of document so student is a viewer
   // return studentname, studentemail
+
+  //if there are no viewers (ie it has not bee submitted yet or it has been returned)
+  //we should return the owner of the document?
+
+  
   Logger.log("In getStudent");
   var currentdoc = DocumentApp.getActiveDocument()
   var currentid = DriveApp.getFileById(currentdoc.getId());
@@ -73,8 +81,13 @@ function getStudent(){
   for (var i = 0; i < viewer.length; i++) {
     var studentname = viewer[i].getName();
     var studentemail = viewer[i].getEmail();
-   }  
-  return [studentname,studentemail];
+   }
+  if (viewer.length>0){  
+    return [studentname,studentemail];}
+  else{
+    return [getowner.getName(),getowner.getEmail()];
+  }
+  
 }
 
 
