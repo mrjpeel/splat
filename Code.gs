@@ -630,7 +630,7 @@ function getSpreadsheetData(){
 
 function firebaseconnect(){
   var fburl = "https://splat-ebd62.firebaseio.com/";
-  var fbsecret = "dmncbyHH6zJ9NKkGaeh9lNdYFu3Q9IDsfOWFSAJI";
+  var fbsecret = "";
   var fbdb = FirebaseApp.getDatabaseByUrl(fburl, fbsecret);
   
   return fbdb;
