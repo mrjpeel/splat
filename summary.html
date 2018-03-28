@@ -37,12 +37,12 @@
 </head>
   <body>
   <div id="nameheader">
-  <img src="http://warwickcomputing.studio/SPLAT_LOGO.png" width=100px>
+  <img src="https://splat-ebd62.firebaseapp.com/SPLAT_LOGO.png" width=100px>
   </div>
   <div id="name"></div>
     <div class="chartWithOverlay">
 
- <div id="line-chart" ><img width=100 src="http://warwickcomputing.studio/loading-circle.gif"></div>
+ <div id="line-chart" ><img width=100 src="https://splat-ebd62.firebaseapp.com/splat_loading.gif"></div>
 
  <div id="overlay">
   </div>
@@ -81,8 +81,10 @@
                      'height':300,
                      
                      vAxis: { title: "Mark", minValue: 0, maxValue: 10},
-                     hAxis: {title: "Homework",showTextEvery:1,slantedText: true, 
-        slantedTextAngle: 90},
+                     hAxis: {title: "Homework",showTextEvery:1 //,
+                     //slantedText: true, 
+        //slantedTextAngle: 90
+        },
                      animation: {"startup": true},
                      legend: 'none',
                      pointSize: 5
@@ -101,7 +103,7 @@ data.setProperty(i,11,'style','background-color: '+ (data.getValue(i,11)=='amber
   
   //data.setCell(1, 0,'10', '10', {style: 'font-style:bold; font-size:22px;'});
 var targets = new google.visualization.DataView(data);
-    targets.setColumns([1,4,5,6,9,11]);
+    targets.setColumns([1,4,5,6,7,9,11]);
    
 
 

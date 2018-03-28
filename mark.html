@@ -12,9 +12,9 @@
 <body>
 
 <div class="sidebar">
-  <img src="http://warwickcomputing.studio/SPLAT_LOGO.png" width=100px>
+  <img src="https://splat-ebd62.firebaseapp.com/SPLAT_LOGO.png" width=100px>
   <!-- DETAILS -->
-  <div class="block" id='tracking'>Locating Tracking Sheet <img width=20 src="http://warwickcomputing.studio/loading-circle.gif"></div>
+  <div class="block" id='tracking'>Locating Tracking Sheet <img width=20 src="https://splat-ebd62.firebaseapp.com/loading-circle.gif"></div>
   <br>
   <div>
     <form id="hwkform" onsubmit="return false;">
@@ -34,12 +34,6 @@
           <textarea id="target" rows="4" cols="33" placeholder="Even better if..."></textarea>
         </div>
       
- <!--
-        <p>Is there a reference website to help them?</p>
-        <textarea name='research' rows='4' cols='37' placeholder="Paste link here"></textarea>
-      </div>
-      <br>
--->
       <!-- SUBMIT -->
       <div class="block">
         <button class="action" id="Button" type='submit' onclick='writetosheet();' disabled>Submit Marking</button>
@@ -52,9 +46,7 @@
   
  </div> 
 <script>
-  
-  //google.script.run.withSuccessHandler(sheetwritten).writetosheet()
-  
+    
   checktrackerfile();
   function checktrackerfile(){
     var findtracker = google.script.run.withSuccessHandler(onsuccess).findTracker();
@@ -69,15 +61,15 @@
   }
   
   else if(details[0]){
-      document.getElementById('tracking').innerHTML = '<img width=20 src="http://warwickcomputing.studio/splat_tick.png"> ' +details[2] + ' found';
+      document.getElementById('tracking').innerHTML = '<img width=20 src="https://splat-ebd62.firebaseapp.com/splat_tick.png"> ' +details[2] + ' found';
       document.getElementById('number').value = details[4];
       var btn = document.getElementById("Button"); 
       btn.disabled = false;
 
   } else {
  
-      document.getElementById('tracking').innerHTML = '<img width=20 src="http://warwickcomputing.studio/splat_tick.png"> ' +details[2] + ' found';
-     document.getElementById('hwkform').innerHTML = "ALREADY MARKED";
+      document.getElementById('tracking').innerHTML = '<img width=20 src="https://splat-ebd62.firebaseapp.com/splat_tick.png"> ' +details[2] + ' found';
+     document.getElementById('hwkform').innerHTML ="<h3>ALREADY MARKED</h3>";
   }
   
   }

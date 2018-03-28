@@ -52,7 +52,7 @@ function about_(){
 
 /// CONSTANTS ///
 
-var teachers = ['m.colliver@warwickschool.org'];
+var teachers = ['m.colliver@warwickschool.org', 'j.peel@warwickschool.org'];
 
 var WORKTITLECOLUMN = 1; // B
 var WORKMARKCOLUMN = 2; // C 
@@ -60,6 +60,33 @@ var TEACHERCOMMENTCOLUMN = 5; // E
 var STUDENTTARGETCOLUMN = 6; // F
 var TARGETSTATUSCOLUMN = 7; // G
 var TARGETMETCOLUMN = 8; // H
+
+
+
+// This code fetches the Google and YouTube logos, inlines them in an email
+ // and sends the email
+ function inlineImage(hwk) {
+   var splatLogoUrl = "https://splat-ebd62.firebaseapp.com/SPLAT_LOGO.png";
+   var splatLogoBlob = UrlFetchApp
+                          .fetch(splatLogoUrl)
+                          .getBlob()
+                          .setName("splatLogoBlob");
+   MailApp.sendEmail({
+     to: "m.colliver@warwickschool.org,j.peel@warwickschool.org",
+     subject: "SPLAT - your work is ready for reflection",
+     htmlBody: "<div style='background-color:orange;border:2px solid black;height:120px;padding:5px;'><img src='cid:splatLogo' style='float:left'><div style='display:inline-block;margin: 10px 0 0 10px;'>Your work has been marked - please come and reflect on the comments for <a href='"+DocumentApp.getActiveDocument().getUrl()
+     +"'>"+hwk+"</a><p>Kind regards,<br><strong>The SPLAT team</strong></div></div>",
+     inlineImages:
+       {
+         splatLogo: splatLogoBlob,
+       },
+     noReply: true
+   });
+ }
+
+
+
+
 
 
 
@@ -160,7 +187,7 @@ function findTracker(){
 */
 }
 
-
+/*
 function createTracker(){
   
   var student = getStudent();
@@ -209,6 +236,7 @@ function createTracker(){
   tracker.getRange('L1').setValue('RAG');
 }  
 
+*/
 
 function writeToFirebase(formData){
   // do validation
@@ -245,6 +273,8 @@ function writeToFirebase(formData){
   
   var data = {"Teacher marked" : feedbackdate, "Piece of work" : formData[0], "Mark":formData[1], "Mark range":formData[2],"Rel mark":formData[3],"Teacher comment":formData[4],"Student target":formData[5],"Target status":"not met"};
   Logger.log(fbdb.setData(path, data));
+  
+  inlineImage(formData[0]);
   return true;
   
   
@@ -252,7 +282,7 @@ function writeToFirebase(formData){
 }
 
 
-
+/*
 
 function writetosheet(formData) {
   
@@ -308,7 +338,7 @@ function writetosheet(formData) {
     }
 }
 
-
+*/
 
 
 function getCommentsFromFirebase() {
@@ -366,7 +396,7 @@ function getCommentsFromFirebase() {
 
 }
 
-
+/*
 function getcomments() {
   var student = findTracker();
  // Logger.log(student);
@@ -411,6 +441,9 @@ function getcomments() {
     return false;
   }
 }
+
+*/
+
 // Student Response To Sheet
 
 function updateTarget(x){
@@ -481,7 +514,7 @@ var student = getStudent();
   var feedbackdate = Utilities.formatDate(new Date(), "GMT", "dd/MM/yyyy").toString();
   //might still need the ' ?
   
-  var data = {"Student response data" : feedbackdate, "Student response" : formData[0], "RAG":formData[1]};
+  var data = {"Student response date" : feedbackdate, "Student response" : formData[0], "RAG":formData[1]};
   Logger.log(fbdb.updateData(path, data));
   return true;
   
@@ -489,7 +522,7 @@ var student = getStudent();
   
 }
 
-
+/*
 function addStudentComment(formData){
  Logger.log('Updating comment');
  
@@ -524,7 +557,7 @@ function addStudentComment(formData){
   }
   return false;
 }
-
+*/
 
 function getFirebaseData(){
   Logger.log('\n____________\nGet S_sheet Data\n_____________');
@@ -548,13 +581,13 @@ function getFirebaseData(){
   //need to setup data structure ready for charting
   
   data=[];
-  columnheaders = ["Teacher marked","Piece of work","Mark","Mark range","Rel mark","Teacher comment","Student target","Target status","Target met against","S R","S R D","RAG"];
+  columnheaders = ["Teacher marked","Work","Mark","Mark range","Rel mark","Teacher comment","Student target","Target status","Target met against","Student Reflection","S R D","RAG"];
   data.push(columnheaders);
  //loop to read through data and put into data structure for charting
   //data.push(["12/2/2018","HWK12",10,12,9.8,"boo","boo","met","boo","2/3","2/3","red"]);
   for(var i in thedata) {
     data.push([ thedata[i]["Teacher marked"],thedata[i]["Piece of work"],thedata[i]["Mark"],thedata[i]["Mark range"],parseFloat(thedata[i]["Rel mark"]),
-               thedata[i]["Teacher comment"],thedata[i]["Student target"],"met","boo","2/3","2/3",thedata[i]["RAG"]]);
+               thedata[i]["Teacher comment"],thedata[i]["Student target"],thedata[i]["Target status"],thedata[i]["Target met against"],thedata[i]["Student response"],thedata[i]["Student response date"],thedata[i]["RAG"]]);
   }
   
   
@@ -565,6 +598,7 @@ function getFirebaseData(){
 }
 
 
+/*
 function getSpreadsheetData(){
   Logger.log('\n____________\nGet S_sheet Data\n_____________');
   
@@ -591,6 +625,7 @@ function getSpreadsheetData(){
   }
   return false;
 }
+*/
 
 
 function firebaseconnect(){
@@ -603,7 +638,7 @@ function firebaseconnect(){
 
 }
 
-
+/*
 // TEST OF FIREBASE //
 function tofirebase(){
   var fbdb = firebaseconnect();
@@ -687,3 +722,4 @@ function firebasequery(){
   });
   
 }
+*/

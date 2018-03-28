@@ -14,17 +14,17 @@
  </head>
  <body>
  <div class="sidebar">
-   <img src="http://warwickcomputing.studio/SPLAT_LOGO.png" width=100px>
+   <img src="https://splat-ebd62.firebaseapp.com/SPLAT_LOGO.png" width=100px>
    <b><div id="greeting" class="minititle"></div></b>
    <div id="wholeform">
    <div id="teacherfeedback">
      <h3 id="feedbackheading">Feedback</h3>
      <div class="minititle">Comments</div>
-     <div id="tcomment"> <img width=20 src="http://warwickcomputing.studio/loading-circle.gif"></div>
+     <div id="tcomment"> <img width=20 src="https://splat-ebd62.firebaseapp.com/splat_loading.gif"></div>
      <div class="minititle">Target</div>
-     <div id="targetset"> <img width=20 src="http://warwickcomputing.studio/loading-circle.gif"> </div>
+     <div id="targetset"> <img width=20 src="https://splat-ebd62.firebaseapp.com/splat_loading.gif"> </div>
      <div class="minititle">Mark</div>
-     <div id="mark"> <img width=20 src="http://warwickcomputing.studio/loading-circle.gif"> </div>
+     <div id="mark" style="display: none" placeholder="Displayed once review submitted"> <img width=20 src="https://splat-ebd62.firebaseapp.com/loading-circle.gif"> </div>
 
 </div>
   <br>
@@ -54,7 +54,7 @@
       Below is a list of outstanding targets.<br/>
       Check the box if you feel you have met the target in this homework.
     </p>
-    <div id="currentTargets"> <img width=20 src="http://warwickcomputing.studio/loading-circle.gif"></div>
+    <div id="currentTargets"> <img width=20 src="https://splat-ebd62.firebaseapp.com/splat_loading.gif"></div>
   </div>
   </div>
   </div>
@@ -72,6 +72,7 @@
     document.getElementById("tcomment").innerHTML = details[1];
     document.getElementById("targetset").innerHTML = details[2];
     document.getElementById("mark").innerHTML = details[3];
+    
     document.getElementById("feedbackheading").innerHTML = "Feedback for "+details[5];
     var ct='';
     for (i = 0; i < details[4].length; i++) { 
@@ -103,6 +104,8 @@
     
     function studentresponse(){
     var inputs, index, form;
+    
+    document.getElementById("mark").style.display = 'inline';
 
 form = document.getElementById('myFormId'); // or form = document.formName
 inputs = form.getElementsByTagName('input');
